@@ -1,0 +1,47 @@
+version: '2'
+
+services:
+
+  apilearnSQL:
+    container_name: "apilearn-BDD_dev"
+    image: mysql:latest
+    restart: always
+    volumes:
+      - apilearn-vol:/var/lib/mysql
+      - ./mysql:/docker-entrypoint-initdb.d
+    environment:
+      MYSQL_CHARSET: utf8
+      MYSQL_ROOT_PASSWORD: root_pwd
+      MYSQL_USER: sql_user
+      MYSQL_PASSWORD: sql_user_pwd
+      MYSQL_DATABASE: apilearnBDD
+
+  myadmin:
+    container_name: "apilearn-myadmin_dev"
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    environment:
+      PMA_ARBITRARY: 1
+      PMA_HOST: apilearnSQL
+      VIRTUAL_HOST: admin.apilearn.lan, www.admin.apilearn.lan
+    depends_on:
+        - apilearnSQL
+  web:
+    container_name: "apilearn-web_dev"
+    build: ./php7.0/
+    restart: always
+    depends_on:
+      - apilearnSQL
+    volumes:
+      - ./vhost/:/etc/apache2/from-host:rw
+      - ../../www/apilearn:/var/www/html:rw
+    environment:
+      VIRTUAL_HOST: apilearn.lan, www.apilearn.lan
+
+volumes:
+  apilearn-vol:
+
+networks:
+  default:
+    external:
+      name: web

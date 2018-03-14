@@ -1,0 +1,14 @@
+#!/bin/bash
+
+if [! -d "/var/lib/docker/volumes/nginx-proxy"]; then
+docker volume create nginx-proxy
+fi
+
+docker run -d \
+	--restart always \
+	-p 80:80 -p 443:443 -v \
+	/var/run/docker.sock:/tmp/docker.sock -v \
+	nginx-proxy:/etc/nginx/certs \
+	--name nginx-proxy_prod \
+	--net web \
+	jwilder/nginx-proxy

@@ -1,0 +1,7 @@
+#!/bin/bash
+
+$web=(docker network inspect webb | grep 'Error*')
+
+if [ $web -eq Error* ]; then
+	echo "c'est pas cool"
+fi

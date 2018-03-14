@@ -1,0 +1,17 @@
+#!/bin/bash
+
+apt-get install linuxbrew-wrapper
+curl -L https://raw.githubusercontent.com/docker/compose/$(docker-compose version --short)/contrib/completion/bash/docker-compose -o /etc/bash_completion.d/docker-compose
+curl -L https://raw.githubusercontent.com/docker/docker/master/contrib/completion/bash/docker > /etc/bash_completion.d/docker
+
+usermod -aG docker $USER
+
+echo "# Docker completation" >> ~/.bashrc
+echo "if [ -f $(brew --prefix)/etc/bash_completion ]; then" >> ~/.bashrc
+echo ". $(brew --prefix)/etc/bash_completion" >> ~/.bashrc
+echo "fi" >> ~/.bashrc
+
+
+
+echo "Redemarrer la session pour prendre en compte les modifications"
+read -rsp $'Press enter to continue...\n'
